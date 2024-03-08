@@ -48,7 +48,8 @@ import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import androidx.core.app.NotificationCompat;
 import android.content.Intent;
-
+import android.app.AlarmManager;
+import android.content.IntentFilter;
 import android.os.Build;
 
 import org.apache.cordova.CallbackContext;
