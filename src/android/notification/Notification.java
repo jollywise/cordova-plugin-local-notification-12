@@ -204,6 +204,7 @@ public final class Notification {
             return;
         }
 
+        boolean hasAlarmPermission = Manager.getInstance(context).canScheduleExactAlarms();
         persist(ids);
 
         if (!options.isInfiniteTrigger()) {
@@ -225,18 +226,41 @@ public final class Notification {
             try {
                 switch (options.getPrio()) {
                     case PRIORITY_MIN:
-                        mgr.setExact(RTC, time, pi);
+                        if (hasAlarmPermission) {
+                            mgr.setExact(RTC, time, pi);
+                        } else {
+                            mgr.set(RTC, time, pi);
+                        }
+                        // mgr.setExact(RTC, time, pi);
                         break;
                     case PRIORITY_MAX:
                         if (SDK_INT >= M) {
-                            AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(time, pi);
-                            mgr.setAlarmClock(info, pi);
+                            if (hasAlarmPermission) {
+                                mgr.setExactAndAllowWhileIdle(RTC_WAKEUP, time, pi);
+                            } else {
+                                mgr.setAndAllowWhileIdle(RTC_WAKEUP, time, pi);
+                            }
                         } else {
-                            mgr.setExact(RTC_WAKEUP, time, pi);
+                            if (hasAlarmPermission) {
+                                mgr.setExact(RTC, time, pi);
+                            } else {
+                                mgr.set(RTC, time, pi);
+                            }
                         }
+//                        if (SDK_INT >= M) {
+//                            AlarmManager.AlarmClockInfo info = new AlarmManager.AlarmClockInfo(time, pi);
+//                            mgr.setAlarmClock(info, pi);
+//                        } else {
+//                            mgr.setExact(RTC_WAKEUP, time, pi);
+//                        }
                         break;
                     default:
-                        mgr.setExact(RTC_WAKEUP, time, pi);
+                        if (hasAlarmPermission) {
+                            mgr.setExact(RTC_WAKEUP, time, pi);
+                        } else {
+                            mgr.set(RTC_WAKEUP, time, pi);
+                        }
+//                        mgr.setExact(RTC_WAKEUP, time, pi);
                         break;
                 }
             } catch (Exception ignore) {
