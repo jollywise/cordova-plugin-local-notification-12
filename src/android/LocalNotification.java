@@ -103,6 +103,8 @@ public class LocalNotification extends CordovaPlugin {
     // Launch details
     private static Pair<Integer, String> launchDetails;
 
+    private AlarmPermissionReceiver alarmPermissionReceiver = new AlarmPermissionReceiver();
+
     private static int REQUEST_PERMISSIONS_CALL = 10;
 
     private static int REQUEST_IGNORE_BATTERY_CALL = 20;
@@ -117,6 +119,11 @@ public class LocalNotification extends CordovaPlugin {
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         LocalNotification.webView = new WeakReference<CordovaWebView>(webView);
+
+        this.cordova.getActivity().getApplicationContext().registerReceiver(
+                alarmPermissionReceiver,
+                new IntentFilter(AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED)
+        );
     }
 
     /**
@@ -135,7 +142,9 @@ public class LocalNotification extends CordovaPlugin {
      */
     @Override
     public void onDestroy() {
+
         deviceready = false;
+        this.cordova.getActivity().getApplicationContext().unregisterReceiver(alarmPermissionReceiver);
     }
 
     /**
