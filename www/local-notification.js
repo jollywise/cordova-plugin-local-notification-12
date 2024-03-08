@@ -631,6 +631,30 @@ exports.fireQueuedEvents = function() {
 };
 
 /**
+ * Open native settings to enable notifications.
+ *
+ * @param [ Function ] callback The function to be exec as the callback.
+ * @param [ Object ]   scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.openNotificationSettings = function (callback, scope) {
+    this._exec('openNotificationSettings', null, callback, scope);
+};
+
+/**
+ * Open native settings to enable alarms & reminders. Android only.
+ *
+ * @param [ Function ] callback The function to be exec as the callback.
+ * @param [ Object ]   scope    The callback function's scope.
+ *
+ * @return [ Void ]
+ */
+exports.openAlarmSettings = function (callback, scope) {
+    this._exec('openAlarmSettings', null, callback, scope);
+};
+
+/**
  * Merge custom properties with the default values.
  *
  * @param [ Object ] options Set of custom values.
