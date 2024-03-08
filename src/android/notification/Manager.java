@@ -79,10 +79,28 @@ public final class Manager {
     }
 
     /**
+     * Check if app has local notification permission.
+     */
+    public boolean hasPermission() { return getNotCompMgr().areNotificationsEnabled(); }
+
+    /**
      * Check if user has enabled permission for local notifications.
      */
     public boolean areNotificationsEnabled() {
         return getNotCompMgr().areNotificationsEnabled();
+    }
+
+    /**
+     * Check if user canScheduleExactAlarms
+     */
+    public boolean canScheduleExactAlarms() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S){
+            return true;
+        } else {
+            AlarmManager mgr = getAlarmMgr();
+            boolean hasPermission = (mgr.canScheduleExactAlarms() == true);
+            return hasPermission;
+        }
     }
 
     /**
@@ -464,6 +482,10 @@ public final class Manager {
         return NotificationManagerCompat.from(context);
     }
 
+    /**
+     * Alarm manager for the application.
+     */
+    private AlarmManager getAlarmMgr () { return (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); }
 }
 
 // codebeat:enable[TOO_MANY_FUNCTIONS]
