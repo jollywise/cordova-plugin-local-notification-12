@@ -13,11 +13,16 @@ import java.util.Random;
 public final class LaunchUtils {
 
    private static int getIntentFlags() {
-        int FLAG_MUTABLE = 33554432; // don't use pendingIntent.FLAG_MUTABLE, use numeric value instead to be able to compile api < 31
+        int FLAG_MUTABLE = 33554432; // Numeric value for FLAG_MUTABLE
+        int FLAG_IMMUTABLE = 67108864; // Numeric value for FLAG_IMMUTABLE
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (android.os.Build.VERSION.SDK_INT >= 31) {
-          flags |= FLAG_MUTABLE;
+        
+        if (android.os.Build.VERSION.SDK_INT >= 31) { // Android 12 and above
+            flags |= FLAG_IMMUTABLE;
+        } else { // Below Android 12
+            flags |= FLAG_MUTABLE;
         }
+        
         return flags;
     }
 
