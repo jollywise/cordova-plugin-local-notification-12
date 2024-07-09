@@ -13,6 +13,14 @@ import java.util.Random;
 public final class LaunchUtils {
 
    private static int getIntentFlags() {
+        // Switch between FLAG_MUTABLE and FLAG_IMMUTABLE based on Android version
+        // FLAG_MUTABLE is used for Android versions below 12 for backwards compatibility
+
+        // https://stackoverflow.com/questions/77275691/targeting-u-version-34-and-above-disallows-creating-or-retrieving-a-pendingin/77691101#77691101
+        // 'if you have an implicit intent within a PendingIntent object with FLAG_MUTABLE, your app will crash.'
+        // https://developer.android.com/about/versions/14/behavior-changes-14#safer-intents 
+        // https://developer.android.com/guide/components/intents-filters#Types
+
         int FLAG_MUTABLE = 33554432; // Numeric value for FLAG_MUTABLE
         int FLAG_IMMUTABLE = 67108864; // Numeric value for FLAG_IMMUTABLE
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
